@@ -65,12 +65,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous()
                 // защищенные URL
-                .antMatchers("/admin/**").access("hasRole('ADMIN')")
-                .antMatchers("/user/**").access("hasRole('USER')")
+                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/user/**").access("hasRole('ROLE_USER')")
                 .anyRequest().authenticated();
     }
-
-
 
 
     @Override
@@ -88,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // Необходимо для шифрования паролей
     // В данном примере не используется, отключен
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    protected PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }
