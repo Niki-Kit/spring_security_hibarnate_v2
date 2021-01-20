@@ -25,6 +25,7 @@ public class PersonServiceImp implements PersonService, UserDetailsService {
     @Autowired
     RoleDAO roleDAO;
 
+
     public List<Person> index() {
         return personDAO.index();
     }

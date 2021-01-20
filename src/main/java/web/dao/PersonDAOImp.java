@@ -1,6 +1,8 @@
 package web.dao;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import web.model.Person;
 
@@ -17,6 +19,9 @@ public class PersonDAOImp implements PersonDAO{
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public List<Person> index() {
         return entityManager.createQuery("from Person").getResultList();
     }
@@ -28,6 +33,8 @@ public class PersonDAOImp implements PersonDAO{
     }
 
     public void save(Person person) {
+        String pass = passwordEncoder.encode(person.getPassword());
+        person.setPassword(pass);
         entityManager.merge(person);
         entityManager.flush();
     }
@@ -37,7 +44,8 @@ public class PersonDAOImp implements PersonDAO{
         personToBeUpdated.setName(updatedPerson.getName());
         personToBeUpdated.setAge(updatedPerson.getAge());
         personToBeUpdated.setEmail(updatedPerson.getEmail());
-        personToBeUpdated.setPassword(updatedPerson.getPassword());
+        String pass= passwordEncoder.encode(updatedPerson.getPassword());
+        personToBeUpdated.setPassword(pass);
     }
 
 
